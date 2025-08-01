@@ -1,0 +1,102 @@
+/* Estilos profesionales para login */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(120deg, #e3f6f5 0%, #b2f7ef 50%, #a0c4ff 100%);
+}
+
+.login-form {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+  padding: 2.5rem 2rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  font-family: 'Nunito', 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+.login-title {
+  font-family: 'Montserrat', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-size: 2rem;
+  color: #2bbbad;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.login-row {
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+
+.login-row input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid #b2f7ef;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #f4f8fb;
+  color: #222e36;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.login-row input:focus {
+  border: 1.5px solid #2bbbad;
+}
+
+.login-error {
+  color: #e53935;
+  font-size: 0.95rem;
+  margin-top: 0.2rem;
+  display: block;
+}
+
+.login-btn {
+  background: #2bbbad;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+.login-btn:hover {
+  background: #43a047;
+}
+
+.login-link {
+  display: block;
+  margin-bottom: 1.2rem;
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.login-link:hover {
+  color: #125ea2;
+  text-decoration: underline;
+}
+
+.login-success {
+  color: #43a047;
+  font-size: 1.1rem;
+  margin-top: 1.2rem;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .login-form {
+    padding: 1.2rem 0.5rem;
+  }
+  .login-title {
+    font-size: 1.3rem;
+  }
+}

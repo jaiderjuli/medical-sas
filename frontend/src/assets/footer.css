@@ -1,0 +1,29 @@
+/* Footer profesional, colores suaves y tipografía moderna */
+.footer {
+  width: 100%;
+  background: linear-gradient(90deg, #e3f6f5 0%, #a0c4ff 100%);
+  color: #1976d2;
+  padding: 1.2rem 0 1rem 0;
+  text-align: center;
+  font-family: 'Nunito', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  box-shadow: 0 -2px 12px rgba(44, 62, 80, 0.06);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .footer {
+    font-size: 0.95rem;
+    padding: 0.8rem 0 0.7rem 0;
+  }
+}

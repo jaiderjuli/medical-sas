@@ -1,0 +1,105 @@
+/* Paleta de colores salud: verde, azul, blanco, gris suave */
+:root {
+  --primary-color: #2bbbad; /* Verde agua */
+  --secondary-color: #1976d2; /* Azul profesional */
+  --accent-color: #43a047; /* Verde más oscuro */
+  --background-color: #f4f8fb; /* Gris muy claro */
+  --text-color: #222e36; /* Gris oscuro */
+  --card-bg: #ffffff;
+  --border-radius: 18px;
+  --shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+  --font-main: 'Nunito', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  --font-title: 'Montserrat', 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+body {
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-main);
+}
+
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Degradado profesional salud: verde agua a azul claro */
+  background: linear-gradient(120deg, #e3f6f5 0%, #b2f7ef 50%, #a0c4ff 100%);
+}
+
+.home-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 3rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+
+.home-title {
+  font-family: var(--font-title);
+  font-size: 2.8rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.home-lead {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-bottom: 2.2rem;
+  font-weight: 500;
+}
+
+.home-btn-primary {
+  background: var(--primary-color);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 0.75rem 2.2rem;
+  margin: 0 0.5rem;
+  font-size: 1.1rem;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.home-btn-primary:hover {
+  background: var(--accent-color);
+}
+
+.home-btn-secondary {
+  background: var(--secondary-color);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 0.75rem 2.2rem;
+  margin: 0 0.5rem;
+  font-size: 1.1rem;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.home-btn-secondary:hover {
+  background: #125ea2;
+}
+
+.home-logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 600px) {
+  .home-card {
+    padding: 2rem 1rem;
+  }
+  .home-title {
+    font-size: 2rem;
+  }
+}

@@ -1,0 +1,532 @@
+/* Estilos para dashboard de usuario */
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(120deg, #e3f6f5 0%, #b2f7ef 50%, #a0c4ff 100%);
+}
+
+.dashboard-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+  padding: 2.5rem 2rem;
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+  font-family: 'Nunito', 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+.dashboard-title {
+  font-family: 'Montserrat', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-size: 2rem;
+  color: #2bbbad;
+  font-weight: 800;
+  margin-bottom: 2rem;
+}
+
+.dashboard-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.dashboard-section {
+  background: #f4f8fb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+  padding: 1.5rem 1.2rem;
+  min-width: 220px;
+  max-width: 260px;
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-section h3 {
+  color: #1976d2;
+  font-size: 1.2rem;
+  margin-bottom: 0.7rem;
+}
+
+.dashboard-section p {
+  color: #222e36;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.dashboard-btn {
+  background: #2bbbad;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 2.1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  width: fit-content;
+  min-width: 120px;
+  align-self: flex-end;
+  transition: background 0.2s;
+}
+.dashboard-btn[type="submit"] {
+  padding: 0.8rem 1.5rem;
+  min-width: 0;
+  width: auto;
+  align-self: center;
+}
+.dashboard-btn:hover {
+  background: #43a047;
+}
+
+.dashboard-menu-bar {
+  width: 100vw;
+  left: 0;
+  right: 0;
+  border-radius: 0;
+  background: #222e36;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 2.5rem;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
+}
+.dashboard-logo-app {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.dashboard-logo {
+  width: 40px;
+  height: 40px;
+}
+.dashboard-app-name {
+  color: #2bbbad;
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-family: 'Montserrat', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  letter-spacing: -1px;
+}
+.dashboard-menu {
+  display: flex;
+  gap: 1.2rem;
+}
+.dashboard-menu button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+.dashboard-menu button.active,
+.dashboard-menu button:hover {
+  background: #2bbbad;
+  color: #fff;
+}
+.dashboard-logout {
+  background: #e53935 !important;
+  color: #fff !important;
+  transition: background 0.2s;
+}
+.dashboard-logout:hover {
+  background: #b71c1c !important;
+}
+.dashboard-content {
+  max-width: none;
+  width: 100vw;
+  min-height: 80vh;
+  margin: 0;
+  padding: 2rem 0;
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+}
+.dashboard-title {
+  font-family: 'Montserrat', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-size: 1.5rem;
+  color: #2bbbad;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.dashboard-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.dashboard-btn[type="submit"] {
+  align-self: center;
+}
+.dashboard-form-row {
+  display: flex;
+  gap: 1.2rem;
+}
+.dashboard-form-row input,
+.dashboard-form-row select {
+  flex: 1 1 0;
+  padding: 0.7rem 1rem;
+  border: 1px solid #b2f7ef;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #f4f8fb;
+  color: #222e36;
+  outline: none;
+  transition: border 0.2s;
+}
+.dashboard-form-row input:focus,
+.dashboard-form-row select:focus {
+  border: 1.5px solid #2bbbad;
+}
+.dashboard-btn {
+  background: #2bbbad;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 2.1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  width: fit-content;
+  min-width: 120px;
+  align-self: flex-end;
+  transition: background 0.2s;
+}
+.dashboard-btn[type="submit"] {
+  padding: 0.8rem 1.5rem;
+  min-width: 0;
+  width: auto;
+  align-self: center;
+}
+.dashboard-btn:hover {
+  background: #43a047;
+}
+.dashboard-msg-info {
+  color: #1976d2;
+  font-size: 1.1rem;
+  margin-top: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+}
+.dashboard-citas {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.dashboard-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+  width: 100%;
+  max-width: 320px;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.dashboard-search {
+  width: 100%;
+  max-width: 220px;
+  padding: 0.6rem 2.2rem 0.6rem 1.7rem;
+  border: 1px solid #b2f7ef;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f4f8fb;
+  color: #222e36;
+  transition: border 0.2s;
+}
+.dashboard-search:focus {
+  border: 1.5px solid #2bbbad;
+}
+.dashboard-search-icon {
+  position: relative;
+  left: -2.1rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  pointer-events: none;
+  color: #1976d2;
+}
+.dashboard-citas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.dashboard-cita {
+  background: #f4f8fb;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 2.5rem;
+  font-size: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.dashboard-cita-actions {
+  display: flex;
+  gap: 0.7rem;
+}
+.dashboard-btn-cancel {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dashboard-btn-cancel:hover {
+  background: #b71c1c;
+}
+.dashboard-btn-reagendar {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dashboard-btn-reagendar:hover {
+  background: #125ea2;
+}
+.dashboard-cita-empty {
+  color: #e53935;
+  text-align: center;
+  font-weight: 600;
+}
+.dashboard-citas-table-wrapper {
+  width: 100vw;
+  overflow-x: auto;
+  margin-top: 1.2rem;
+}
+.dashboard-citas-table {
+  width: 100vw;
+  min-width: 900px;
+  border-collapse: collapse;
+  background: #f4f8fb;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+  font-size: 1rem;
+}
+.dashboard-citas-table th, .dashboard-citas-table td {
+  padding: 0.8rem 0.7rem;
+  text-align: left;
+  border-bottom: 1px solid #e3f6f5;
+  vertical-align: middle;
+}
+.dashboard-citas-table th {
+  background: #e3f6f5;
+  color: #1976d2;
+  font-weight: 800;
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+.dashboard-citas-table th svg {
+  vertical-align: middle;
+  margin-right: 0.3rem;
+}
+.dashboard-citas-table tr:last-child td {
+  border-bottom: none;
+}
+.dashboard-cita-row:hover {
+  background: #b2f7ef33;
+}
+.dashboard-cita-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.dashboard-cita-empty {
+  color: #e53935;
+  text-align: center;
+  font-weight: 600;
+  padding: 1.2rem 0;
+}
+.dashboard-cita-actions button svg {
+  pointer-events: none;
+}
+.dashboard-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(34,46,54,0.35);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-modal {
+  background: linear-gradient(120deg, #e3f6f5 0%, #b2f7ef 50%, #a0c4ff 100%);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  min-width: 340px;
+  max-width: 95vw;
+  text-align: center;
+  border: 2px solid #2bbbad;
+  position: relative;
+}
+.dashboard-modal h3 {
+  color: #1976d2;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  letter-spacing: -1px;
+}
+.dashboard-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-top: 1.2rem;
+  align-items: stretch;
+}
+.dashboard-modal-form input,
+.dashboard-modal-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid #b2f7ef;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fff;
+  color: #222e36;
+  outline: none;
+  transition: border 0.2s;
+  box-shadow: 0 1px 4px rgba(44,62,80,0.06);
+}
+.dashboard-modal-form input:focus,
+.dashboard-modal-form select:focus {
+  border: 1.5px solid #2bbbad;
+}
+.dashboard-modal-actions {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+.dashboard-modal-actions button {
+  min-width: 140px;
+  max-width: 140px;
+  width: 140px;
+  font-size: 0.97rem;
+  padding: 0.7rem 0;
+  text-align: center;
+  border-radius: 8px;
+  box-sizing: border-box;
+  flex: 1 1 0;
+  height: 44px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-btn-reagendar {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.8rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dashboard-btn-reagendar:hover {
+  background: #125ea2;
+}
+.dashboard-btn-cancel {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.8rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dashboard-btn-cancel:hover {
+  background: #b71c1c;
+}
+.dashboard-btn {
+  background: #2bbbad;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.8rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dashboard-btn:hover {
+  background: #43a047;
+}
+@media (max-width: 800px) {
+  .dashboard-sections {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .dashboard-card {
+    padding: 1.2rem 0.5rem;
+  }
+  .dashboard-content {
+    padding: 1.2rem 0.5rem;
+  }
+  .dashboard-form-row {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+}
+@media (max-width: 900px) {
+  .dashboard-vertical-layout {
+    flex-direction: column;
+  }
+  .dashboard-vertical-menu {
+    width: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    min-height: unset;
+    padding: 1rem 0.5rem;
+    box-shadow: none;
+  }
+  .dashboard-menu-vertical {
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 0;
+    width: 100%;
+  }
+  .dashboard-citas-table {
+    min-width: 600px;
+    font-size: 0.95rem;
+  }
+  .dashboard-content {
+    padding: 1.2rem 0.2rem;
+  }
+  .dashboard-search-bar {
+    max-width: 100%;
+  }
+  .dashboard-search {
+    max-width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .dashboard-modal {
+    padding: 1rem 0.5rem;
+    min-width: 90vw;
+  }
+}
