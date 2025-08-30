@@ -15,7 +15,8 @@ const initialState = {
   departamento: '',
   email: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  documento: ''
 };
 
 const Register = () => {
@@ -41,6 +42,7 @@ const Register = () => {
     if (!form.email.match(/^\S+@\S+\.\S+$/)) errs.email = 'Email inválido';
     if (form.password.length < 8 || !/[A-Z]/.test(form.password) || !/[a-z]/.test(form.password) || !/\d/.test(form.password) || !/[^A-Za-z0-9]/.test(form.password)) errs.password = 'Contraseña insegura';
     if (form.password !== form.confirmPassword) errs.confirmPassword = 'Las contraseñas no coinciden';
+    if (!form.documento.match(/^\d{5,15}$/)) errs.documento = 'Número de documento inválido';
     return errs;
   };
 
@@ -61,7 +63,8 @@ const Register = () => {
           ciudad: form.ciudad,
           departamento: form.departamento,
           email: form.email,
-          password: form.password
+          password: form.password,
+          documento: form.documento
         });
         setSuccess('Cuenta creada. Revisa tu correo para activarla.');
         setForm(initialState);
@@ -101,6 +104,17 @@ const Register = () => {
                   <option value="Otro">Otro</option>
                 </select>
                 {errors.genero && <span className="register-error">{errors.genero}</span>}
+              </div>
+              <div className="register-row">
+                <input
+                  type="text"
+                  name="documento"
+                  placeholder="Número de documento"
+                  value={form.documento}
+                  onChange={handleChange}
+                  required
+                />
+                {errors.documento && <span className="register-error">{errors.documento}</span>}
               </div>
               <div className="register-row">
                 <input name="telefono" placeholder="Número de teléfono" value={form.telefono} onChange={handleChange} />

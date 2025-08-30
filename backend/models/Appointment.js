@@ -1,27 +1,17 @@
 // models/Appointment.js
 const mongoose = require('mongoose');
 
-// Definir el esquema de la cita
 const appointmentSchema = new mongoose.Schema({
-  patient: {
-    type: String,
-    required: true,
-  },
-  doctor: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
-    required: true,
-  },
-  time: {
-    type: String,
-    required: true,
-  },
+  documento: { type: String, required: true }, // <-- este será el identificador del usuario
+  doctor: { type: String, required: true },
+  date: { type: String, required: true },
+  time: { type: String, required: true },
+  especialidad: { type: String },
+  motivo: { type: String },
+  telefono: { type: String },
+  email: { type: String },
+  direccion: { type: String },
+  observaciones: { type: String },
 });
 
-// Crear el modelo de cita
-const Appointment = mongoose.model('Appointment', appointmentSchema);
-
-module.exports = Appointment;
+module.exports = mongoose.model('Appointment', appointmentSchema);

@@ -10,6 +10,8 @@ import ResetPassword from './pages/ResetPassword';
 import DashboardPaciente from './pages/DashboardPaciente';
 import { AuthProvider } from './context/AuthContext';
 import AuthContext from './context/AuthContext';
+import DashboardAdmin from './pages/DashboardAdmin';
+import AdminRoute from './components/AdminRoute';
 
 const PrivateRoute = ({ children }) => {
   const { user } = React.useContext(AuthContext);
@@ -26,6 +28,11 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/activate/:token" element={<ActivateAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/admin" element={ <AdminRoute>
+      <DashboardAdmin />
+    </AdminRoute>
+  }
+/>
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/dashboard" element={
             <PrivateRoute>

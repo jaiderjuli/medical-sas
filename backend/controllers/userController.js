@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 // Función para registrar un usuario
 exports.registerUser = async (req, res) => {
   const {
-    nombre, apellidos, genero, telefono, fechaNacimiento, direccion, ciudad, departamento, email, password
+    nombre, apellidos, documento, genero, telefono, fechaNacimiento, direccion, ciudad, departamento, email, password
   } = req.body;
 
   try {
@@ -31,6 +31,7 @@ exports.registerUser = async (req, res) => {
     const newUser = new User({
       nombre,
       apellidos,
+      documento, // ahora sí tiene valor
       genero,
       telefono,
       fechaNacimiento,
@@ -76,8 +77,10 @@ exports.activateUser = async (req, res) => {
 };
 
 // Función para el login de usuario
-exports.loginUser = async (req, res) => {
+/*exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
+
+  
 
   try {
     const user = await User.findOne({ email });
@@ -93,6 +96,51 @@ exports.loginUser = async (req, res) => {
     }
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.status(200).json({ token });
+  } catch (error) {
+    res.status(500).json({ msg: 'Error al autenticar usuario', error });
+  }
+};*/
+
+/////////////////////////////////////////////////////////////
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  // Usuario admin quemado para pruebas
+  if (email === 'medicalcol.sas@gmail.com' && password === 'admin123@@') {
+    return res.json({
+      _id: 'admin-id',
+      nombre: 'Administrador',
+      apellidos: 'Principal',
+      documento: '00000000', // <-- valor fijo para admin
+      email: 'medicalcol.sas@gmail.com',
+      rol: 'admin',
+      token: 'token-falso-para-pruebas'
+    });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ msg: 'Usuario no encontrado' });
+    }
+    if (!user.isActive) {
+      return res.status(403).json({ msg: 'Debes activar tu cuenta desde el correo' });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Contraseña incorrecta' });
+    }
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({
+      _id: user._id,
+      nombre: user.nombre,
+      apellidos: user.apellidos,
+      documento: user.documento, // <-- valor real del paciente
+      email: user.email,
+      rol: user.rol,
+      token
+    });
   } catch (error) {
     res.status(500).json({ msg: 'Error al autenticar usuario', error });
   }
@@ -140,6 +188,4 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ msg: 'Error al restablecer contraseña', error });
   }
 };
-
-
 

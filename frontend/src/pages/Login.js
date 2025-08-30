@@ -34,9 +34,22 @@ const Login = () => {
       try {
         const res = await api.post('/users/login', form);
         setSuccess('Ingreso exitoso');
-        loginContext(res.data.user || { email: form.email });
-        setTimeout(() => navigate('/dashboard'), 1200);
+        const userData = res.data || {};
+        loginContext(userData);
+
+        // Guarda los datos del usuario en localStorage
+        localStorage.setItem('nombre', userData.nombre || '');
+        localStorage.setItem('apellido', userData.apellido || '');
+        localStorage.setItem('documento', userData.documento || '');
+
+        // Redirigir según el rol
+        if (userData.rol === 'admin') {
+          setTimeout(() => navigate('/admin'), 1200);
+        } else {
+          setTimeout(() => navigate('/dashboard'), 1200);
+        }
       } catch (err) {
+        
         setSuccess('');
         setErrors({ api: err.response?.data?.msg || 'Error al ingresar' });
       } finally {
@@ -60,7 +73,6 @@ const Login = () => {
           </div>
           <a className="login-link" href="/forgot-password">¿Olvidaste tu contraseña?</a>
           <a className="login-link" href="/register">¿No tienes una cuenta? Crear cuenta</a>
-          {/* Aquí podrías integrar un captcha visual si lo deseas */}
           <button className="login-btn" type="submit" disabled={loading}>{loading ? 'Ingresando...' : 'Ingresar'}</button>
           {errors.api && <div className="login-error">{errors.api}</div>}
           {success && <div className="login-success">{success}</div>}
@@ -72,3 +84,4 @@ const Login = () => {
 };
 
 export default Login;
+

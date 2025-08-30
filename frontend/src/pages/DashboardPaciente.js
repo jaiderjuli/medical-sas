@@ -1,57 +1,22 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import Footer from '../components/Footer';
 import '../assets/dashboard.css';
 import logo from '../assets/logo-health.svg';
+import api from '../services/api';
 
-const specialties = [
-  'Medicina General',
-  'Pediatría',
-  'Ginecología',
-  'Cardiología',
-  'Dermatología',
-  'Odontología',
-];
-const doctors = [
-  'Dr. Juan Pérez',
-  'Dra. Ana Gómez',
-  'Dr. Carlos Ruiz',
-  'Dra. Laura Torres',
-];
 const types = [
   'Consulta presencial',
   'Consulta virtual',
 ];
 
-const citasEjemplo = [
-  { id: 1, especialidad: 'Medicina General', medico: 'Dr. Juan Pérez', fecha: '2025-07-10', hora: '09:00', tipo: 'Presencial', estado: 'Realizada' },
-  { id: 2, especialidad: 'Pediatría', medico: 'Dra. Ana Gómez', fecha: '2025-07-15', hora: '11:00', tipo: 'Virtual', estado: 'Pendiente' },
-];
-
-// Cargar los iconos SVG en el DOM
-if (typeof window !== 'undefined') {
-  const svgIcons = document.getElementById('dashboard-icons');
-  if (!svgIcons) {
-    const xhr = new window.XMLHttpRequest();
-    xhr.open('GET', '/dashboard-icons.svg', true);
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        const div = document.createElement('div');
-        div.innerHTML = xhr.responseText;
-        div.style.display = 'none';
-        div.id = 'dashboard-icons';
-        document.body.appendChild(div);
-      }
-    };
-    xhr.send();
-  }
-}
+const today = new Date().toISOString().split('T')[0];
 
 const initialForm = {
   especialidad: '',
-  medico: '',
-  fecha: '',
+  doctor: '',
+  fecha: today, // <-- la fecha actual por defecto
   hora: '',
   tipo: '',
   edad: '',
@@ -66,43 +31,73 @@ const initialForm = {
 const DashboardPaciente = () => {
   const [menu, setMenu] = useState('reservar');
   const [form, setForm] = useState(initialForm);
-  const [citas, setCitas] = useState(citasEjemplo);
+  const [citas, setCitas] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [citaToDelete, setCitaToDelete] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [citaToEdit, setCitaToEdit] = useState(null);
+  const [especialidades, setEspecialidades] = useState([]);
+  const [medicos, setMedicos] = useState([]);
+  const [showLimitModal, setShowLimitModal] = useState(false);
   const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchEspecialidades = async () => {
+      const res = await api.get('/admin/especialidades');
+      setEspecialidades(res.data);
+    };
+    const fetchMedicos = async () => {
+      const res = await api.get('/admin/medicos');
+      setMedicos(res.data);
+    };
+    const fetchCitas = async () => {
+      const res = await api.get('/admin/citas');
+      setCitas(res.data);
+    };
+    fetchEspecialidades();
+    fetchMedicos();
+    fetchCitas();
+  }, []);
 
   const handleFormChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleAgendar = e => {
+  const handleAgendar = async e => {
     e.preventDefault();
-    setMensaje('Cita agendada. Tienes un día para cancelar o reagendar la cita.');
-    // Aquí iría la lógica real de agendar cita
+    // Siempre usa el documento del usuario logueado
+    const formToSend = { ...form, documento: localStorage.getItem('documento') };
+    try {
+      await api.post('/admin/citas', formToSend);
+      setMensaje('Cita agendada. Tienes un día para cancelar o reagendar la cita.');
+      setForm(initialForm);
+      const res = await api.get('/admin/citas');
+      setCitas(res.data);
+    } catch (error) {
+      if (error.response?.data?.msg === 'Solo puedes agendar dos citas por mes.') {
+        setShowLimitModal(true);
+      } else {
+        setMensaje(error.response?.data?.msg || 'Error al agendar la cita.');
+      }
+    }
   };
 
-  const handleCancelar = id => {
-    setCitas(citas.filter(c => c.id !== id));
-  };
-
-  const handleReagendar = id => {
-    setMenu('reservar');
-    setMensaje('Puedes reagendar tu cita.');
-    // Aquí podrías cargar los datos de la cita seleccionada
-  };
-
-  const handleDeleteClick = (id) => {
+  const handleDeleteClick = id => {
     setCitaToDelete(id);
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    setCitas(citas.filter(c => c.id !== citaToDelete));
+  const confirmDelete = async () => {
+    try {
+      await api.delete(`/admin/citas/${citaToDelete}`);
+      const res = await api.get('/admin/citas');
+      setCitas(res.data);
+    } catch (error) {
+      setMensaje('Error al eliminar la cita.');
+    }
     setShowDeleteModal(false);
     setCitaToDelete(null);
   };
@@ -112,17 +107,23 @@ const DashboardPaciente = () => {
     setCitaToDelete(null);
   };
 
-  const handleEditClick = (cita) => {
+  const handleEditClick = cita => {
     setCitaToEdit(cita);
     setShowEditModal(true);
   };
 
-  const handleEditChange = (e) => {
+  const handleEditChange = e => {
     setCitaToEdit({ ...citaToEdit, [e.target.name]: e.target.value });
   };
 
-  const saveEdit = () => {
-    setCitas(citas.map(c => c.id === citaToEdit.id ? citaToEdit : c));
+  const saveEdit = async () => {
+    try {
+      await api.put(`/admin/citas/${citaToEdit._id}`, citaToEdit);
+      const res = await api.get('/admin/citas');
+      setCitas(res.data);
+    } catch (error) {
+      setMensaje('Error al editar la cita.');
+    }
     setShowEditModal(false);
     setCitaToEdit(null);
   };
@@ -132,11 +133,18 @@ const DashboardPaciente = () => {
     setCitaToEdit(null);
   };
 
-  const citasFiltradas = citas.filter(cita =>
-    cita.especialidad.toLowerCase().includes(busqueda.toLowerCase()) ||
-    cita.medico.toLowerCase().includes(busqueda.toLowerCase()) ||
-    cita.fecha.includes(busqueda)
-  );
+  // Obtén el documento del usuario logueado
+  const userDocumento = form.documento || localStorage.getItem('documento');
+
+  // Filtra solo las citas de ese usuario
+  const citasFiltradas = citas
+    .filter(cita => cita.documento === userDocumento)
+    .filter(cita => cita.especialidad && cita.doctor && cita.date)
+    .filter(cita =>
+      cita.especialidad.toLowerCase().includes(busqueda.toLowerCase()) ||
+      cita.doctor.toLowerCase().includes(busqueda.toLowerCase()) ||
+      cita.date.includes(busqueda)
+    );
 
   return (
     <>
@@ -151,6 +159,10 @@ const DashboardPaciente = () => {
           <button className="dashboard-logout" onClick={() => { logout(); navigate('/'); }}>Cerrar sesión</button>
         </nav>
       </div>
+      <div className="dashboard-user-info" style={{margin: '1rem 0', textAlign: 'center'}}>
+        <strong>Paciente:</strong> {localStorage.getItem('nombre')?.split(' ')[0] || ''} {localStorage.getItem('apellido')?.split(' ')[0] || ''} <br />
+        <strong>Identificación:</strong> {localStorage.getItem('documento') || ''}
+      </div>
       <div className="dashboard-content">
         {menu === 'reservar' && (
           <form className="dashboard-form" onSubmit={handleAgendar}>
@@ -158,36 +170,37 @@ const DashboardPaciente = () => {
             <div className="dashboard-form-row">
               <select name="especialidad" value={form.especialidad} onChange={handleFormChange} required>
                 <option value="">Especialidad</option>
-                {specialties.map(s => <option key={s}>{s}</option>)}
+                {especialidades.map(e => (
+                  <option key={e._id} value={e.nombre}>{e.nombre}</option>
+                ))}
               </select>
-              <select name="medico" value={form.medico} onChange={handleFormChange} required>
+              <select name="doctor" value={form.doctor} onChange={handleFormChange} required>
                 <option value="">Médico</option>
-                {doctors.map(d => <option key={d}>{d}</option>)}
+                {medicos.map(m => (
+                  <option key={m._id} value={m.nombre + ' ' + m.apellidos}>
+                    {m.nombre} {m.apellidos} - {m.especialidad}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="dashboard-form-row">
-              <input type="date" name="fecha" value={form.fecha} onChange={handleFormChange} required />
-              <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
-                <input
-                  type="time"
-                  name="hora"
-                  value={form.hora}
-                  onChange={handleFormChange}
-                  required
-                  style={{ flex: 1 }}
-                />
-                <select
-                  name="ampm"
-                  value={form.ampm || ''}
-                  onChange={e => setForm({ ...form, ampm: e.target.value })}
-                  required
-                  style={{ maxWidth: '70px' }}
-                >
-                  <option value="">AM/PM</option>
-                  <option value="AM">AM</option>
-                  <option value="PM">PM</option>
-                </select>
-              </div>
+              <input
+                type="date"
+                name="fecha"
+                value={form.fecha}
+                onChange={handleFormChange}
+                className="register-input"
+                required
+                readOnly
+              />
+              <input
+                type="time"
+                name="hora"
+                value={form.hora}
+                onChange={handleFormChange}
+                className="register-input"
+                required
+              />
             </div>
             <div className="dashboard-form-row">
               <select name="tipo" value={form.tipo} onChange={handleFormChange} required>
@@ -205,7 +218,14 @@ const DashboardPaciente = () => {
               <input type="text" name="direccion" placeholder="Dirección" value={form.direccion} onChange={handleFormChange} required />
             </div>
             <div className="dashboard-form-row">
-              <input type="text" name="documento" placeholder="Documento de identidad" value={form.documento} onChange={handleFormChange} required />
+              <input
+                type="text"
+                name="documento"
+                placeholder="Documento de identidad"
+                value={localStorage.getItem('documento') || ''}
+                readOnly
+                required
+              />
               <input type="text" name="observaciones" placeholder="Observaciones adicionales" value={form.observaciones} onChange={handleFormChange} />
             </div>
             <button className="dashboard-btn" type="submit">Reservar</button>
@@ -241,15 +261,15 @@ const DashboardPaciente = () => {
                     </tr>
                   )}
                   {citasFiltradas.map(cita => (
-                    <tr key={cita.id} className="dashboard-cita-row">
+                    <tr key={cita._id} className="dashboard-cita-row">
                       <td>{cita.especialidad}</td>
                       <td>{cita.medico}</td>
                       <td>{cita.fecha}</td>
                       <td>{cita.hora}</td>
                       <td>{cita.tipo}</td>
-                      <td>{cita.estado}</td>
+                      <td>{cita.estado || 'Pendiente'}</td>
                       <td className="dashboard-cita-actions">
-                        <button className="dashboard-btn-cancel" title="Eliminar" onClick={() => handleDeleteClick(cita.id)}>
+                        <button className="dashboard-btn-cancel" title="Eliminar" onClick={() => handleDeleteClick(cita._id)}>
                           <svg width="18" height="18" viewBox="0 0 24 24" style={{verticalAlign: 'middle'}}><path d="M3 6h18" stroke="#fff" strokeWidth="2"/><rect x="6" y="8" width="12" height="10" rx="2" fill="#fff" stroke="#e53935" strokeWidth="2"/><rect x="10" y="11" width="1.5" height="5" rx="0.75" fill="#e53935"/><rect x="12.5" y="11" width="1.5" height="5" rx="0.75" fill="#e53935"/></svg>
                         </button>
                         <button className="dashboard-btn-reagendar" title="Editar" onClick={() => handleEditClick(cita)}>
@@ -281,8 +301,8 @@ const DashboardPaciente = () => {
           <div className="dashboard-modal">
             <h3>Editar cita</h3>
             <div className="dashboard-modal-form">
-              <input type="date" name="fecha" value={citaToEdit.fecha} onChange={handleEditChange} />
-              <input type="time" name="hora" value={citaToEdit.hora} onChange={handleEditChange} />
+              <input type="date" name="fecha" value={citaToEdit.fecha || ''} onChange={handleEditChange} />
+              <input type="time" name="hora" value={citaToEdit.hora || ''} onChange={handleEditChange} />
               <input type="text" name="motivo" value={citaToEdit.motivo || ''} onChange={handleEditChange} placeholder="Motivo" />
               <input type="text" name="telefono" value={citaToEdit.telefono || ''} onChange={handleEditChange} placeholder="Teléfono" />
               <input type="email" name="email" value={citaToEdit.email || ''} onChange={handleEditChange} placeholder="Correo" />
@@ -297,8 +317,21 @@ const DashboardPaciente = () => {
           </div>
         </div>
       )}
+      {showLimitModal && (
+        <div className="dashboard-modal-overlay">
+          <div className="dashboard-modal">
+            <h3>Solo puedes agendar 2 citas por mes</h3>
+            <div className="dashboard-modal-actions">
+              <button className="dashboard-btn" onClick={() => setShowLimitModal(false)}>
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
 
 export default DashboardPaciente;
+

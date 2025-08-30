@@ -70,7 +70,8 @@ const userSchema = new mongoose.Schema({
   },
   resetPasswordExpires: {
     type: Date
-  }
+  },
+  documento: { type: String, required: true, unique: true },
 });
 
 // Crear el modelo de usuario

@@ -3,22 +3,26 @@ const mongoose = require('mongoose');
 
 // Definir el esquema de Doctor
 const doctorSchema = new mongoose.Schema({
-  name: {
+  nombre: {
     type: String,
     required: true,
   },
-  specialty: {
+  apellidos: {
     type: String,
     required: true,
+  },
+  especialidad: {
+    type: String,
+    required: true,
+  },
+  horario: {
+    type: String,
+    required: false,
   },
   email: {
     type: String,
     required: true,
     unique: true,
-  },
-  phone: {
-    type: String,
-    required: true,
   },
 });
 

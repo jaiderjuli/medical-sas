@@ -6,6 +6,7 @@ const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');  // Verifica que esta línea esté correcta
+const especialidadRoutes = require('./routes/especialidadRoutes');
 
 dotenv.config();
 const app = express();
@@ -19,8 +20,11 @@ app.use(cors());
 
 // Rutas
 app.use('/api/users', userRoutes);           
-app.use('/api/appointments', appointmentRoutes); 
-app.use('/api/doctors', doctorRoutes);       
+app.use('/api/admin/citas', appointmentRoutes); 
+/*app.use('/api/doctors', doctorRoutes);*/ //esta fue la que modifique
+app.use('/api/admin/medicos', doctorRoutes); // Asegúrate de que esta ruta esté correcta
+app.use('/api/admin/especialidades', especialidadRoutes);
+
 
 // Iniciar el servidor local
 const PORT = process.env.PORT || 5000;

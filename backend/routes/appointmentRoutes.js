@@ -1,13 +1,11 @@
 // routes/appointmentRoutes.js
 const express = require('express');
 const router = express.Router();
+const appointmentController = require('../controllers/appointmentController');
 
-// Importa los controladores relacionados con citas (creación, obtención, etc.)
-// Asegúrate de tener un archivo controller de citas creado (appointmentController.js)
-const { createAppointment, getAppointments } = require('../controllers/appointmentController');
-
-// Rutas relacionadas con citas
-router.post('/create', createAppointment);  // Crear cita
-router.get('/', getAppointments);           // Obtener todas las citas
+router.post('/', appointmentController.createAppointment);
+router.get('/', appointmentController.getAppointments);
+router.put('/:id', appointmentController.updateAppointment);
+router.delete('/:id', appointmentController.deleteAppointment);
 
 module.exports = router;
