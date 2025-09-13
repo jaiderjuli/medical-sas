@@ -1,7 +1,6 @@
 // models/Doctor.js
 const mongoose = require('mongoose');
 
-// Definir el esquema de Doctor
 const doctorSchema = new mongoose.Schema({
   nombre: {
     type: String,
@@ -26,7 +25,7 @@ const doctorSchema = new mongoose.Schema({
   },
 });
 
-// Crear el modelo de Doctor
+
 const Doctor = mongoose.model('Doctor', doctorSchema);
 
 module.exports = Doctor;

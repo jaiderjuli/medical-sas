@@ -7,11 +7,13 @@ const userRoutes = require('./routes/userRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');  // Verifica que esta línea esté correcta
 const especialidadRoutes = require('./routes/especialidadRoutes');
+const pacienteRoutes = require('./routes/pacienteRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 dotenv.config();
 const app = express();
 
-// Conecciones a la Bd Mongo
+
 connectDB();
 
 // Middlewares
@@ -21,9 +23,10 @@ app.use(cors());
 // Rutas
 app.use('/api/users', userRoutes);           
 app.use('/api/admin/citas', appointmentRoutes); 
-/*app.use('/api/doctors', doctorRoutes);*/ //esta fue la que modifique
-app.use('/api/admin/medicos', doctorRoutes); // Asegúrate de que esta ruta esté correcta
+app.use('/api/admin/medicos', doctorRoutes); 
 app.use('/api/admin/especialidades', especialidadRoutes);
+app.use('/api/admin/pacientes', pacienteRoutes);
+app.use('/api/admin/notificaciones', notificationRoutes);
 
 
 // Iniciar el servidor local

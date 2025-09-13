@@ -5,16 +5,14 @@ const Appointment = require('../models/Appointment');
 exports.createAppointment = async (req, res) => {
   console.log('BODY:', req.body);
   try {
-    // Obtener el documento del paciente
-    const documento = req.body.documento;
+    const { documento, doctor, fecha, hora, tipo, especialidad } = req.body;
+    if (!documento || !doctor || !fecha || !hora || !tipo || !especialidad) {
+      return res.status(400).json({ msg: 'Todos los campos son obligatorios: documento, doctor, fecha, hora, tipo y especialidad.' });
+    }
 
-    // Obtener el mes y año de la cita que se quiere agendar
-    const fecha = req.body.fecha; // formato: 'YYYY-MM-DD'
     const [year, month] = fecha.split('-');
-
-    // Buscar citas de ese paciente en el mismo mes y año
     const citasDelMes = await Appointment.find({
-      documento: req.body.documento,
+      documento: documento,
       date: { $regex: `^${year}-${month}` }
     });
 
@@ -22,21 +20,21 @@ exports.createAppointment = async (req, res) => {
       return res.status(400).json({ msg: 'Solo puedes agendar dos citas por mes.' });
     }
 
-    // Mapeo de campos del frontend al modelo
-    const horaCompleta = `${req.body.hora} ${req.body.ampm || ''}`.trim();
+   
+    const horaCompleta = `${hora} ${req.body.ampm || ''}`.trim();
 
     const appointmentData = {
-      documento: req.body.documento,
-      doctor: req.body.doctor,
-      date: new Date().toISOString().split('T')[0], // fecha actual
-      time: req.body.hora, // hora con AM/PM
-      especialidad: req.body.especialidad,
+      documento,
+      doctor,
+      date: fecha, 
+      time: horaCompleta,
+      especialidad,
       motivo: req.body.motivo,
       telefono: req.body.telefono,
       email: req.body.email,
       direccion: req.body.direccion,
       observaciones: req.body.observaciones,
-      tipo: req.body.tipo,
+      tipo,
       edad: req.body.edad,
       estado: req.body.estado,
     };

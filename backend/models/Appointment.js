@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 const appointmentSchema = new mongoose.Schema({
-  documento: { type: String, required: true }, // <-- este será el identificador del usuario
+  documento: { type: String, required: true },
   doctor: { type: String, required: true },
   date: { type: String, required: true },
   time: { type: String, required: true },
@@ -12,6 +12,9 @@ const appointmentSchema = new mongoose.Schema({
   email: { type: String },
   direccion: { type: String },
   observaciones: { type: String },
+  tipo: { type: String }, 
+  edad: { type: String }, 
+  estado: { type: String }, 
 });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

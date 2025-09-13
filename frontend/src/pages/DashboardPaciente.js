@@ -16,7 +16,7 @@ const today = new Date().toISOString().split('T')[0];
 const initialForm = {
   especialidad: '',
   doctor: '',
-  fecha: today, // <-- la fecha actual por defecto
+  fecha: today, 
   hora: '',
   tipo: '',
   edad: '',
@@ -41,6 +41,7 @@ const DashboardPaciente = () => {
   const [especialidades, setEspecialidades] = useState([]);
   const [medicos, setMedicos] = useState([]);
   const [showLimitModal, setShowLimitModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
 
@@ -68,7 +69,6 @@ const DashboardPaciente = () => {
 
   const handleAgendar = async e => {
     e.preventDefault();
-    // Siempre usa el documento del usuario logueado
     const formToSend = { ...form, documento: localStorage.getItem('documento') };
     try {
       await api.post('/admin/citas', formToSend);
@@ -76,6 +76,7 @@ const DashboardPaciente = () => {
       setForm(initialForm);
       const res = await api.get('/admin/citas');
       setCitas(res.data);
+      setShowSuccessModal(true); 
     } catch (error) {
       if (error.response?.data?.msg === 'Solo puedes agendar dos citas por mes.') {
         setShowLimitModal(true);
@@ -263,10 +264,10 @@ const DashboardPaciente = () => {
                   {citasFiltradas.map(cita => (
                     <tr key={cita._id} className="dashboard-cita-row">
                       <td>{cita.especialidad}</td>
-                      <td>{cita.medico}</td>
-                      <td>{cita.fecha}</td>
-                      <td>{cita.hora}</td>
-                      <td>{cita.tipo}</td>
+                      <td>{cita.doctor || cita.medico || 'Sin médico'}</td>
+                      <td>{cita.fecha || cita.date || 'Sin fecha'}</td>
+                      <td>{cita.hora || 'Sin hora'}</td>
+                      <td>{cita.tipo || 'Sin tipo'}</td>
                       <td>{cita.estado || 'Pendiente'}</td>
                       <td className="dashboard-cita-actions">
                         <button className="dashboard-btn-cancel" title="Eliminar" onClick={() => handleDeleteClick(cita._id)}>
@@ -323,6 +324,19 @@ const DashboardPaciente = () => {
             <h3>Solo puedes agendar 2 citas por mes</h3>
             <div className="dashboard-modal-actions">
               <button className="dashboard-btn" onClick={() => setShowLimitModal(false)}>
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showSuccessModal && (
+        <div className="dashboard-modal-overlay">
+          <div className="dashboard-modal">
+            <h3>Cita agendada</h3>
+            <p>Pendiente por confirmar</p>
+            <div className="dashboard-modal-actions">
+              <button className="dashboard-btn" onClick={() => setShowSuccessModal(false)}>
                 Cerrar
               </button>
             </div>

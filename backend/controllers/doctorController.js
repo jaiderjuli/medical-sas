@@ -1,7 +1,7 @@
 // controllers/doctorController.js
-const Doctor = require('../models/Doctor'); // Asegúrate de tener un modelo Doctor creado
+const Doctor = require('../models/Doctor'); 
 
-// Función para crear un nuevo médico
+
 exports.createDoctor = async (req, res) => {
   const { nombre, apellidos, especialidad, horario, email } = req.body;
 
@@ -21,7 +21,7 @@ exports.createDoctor = async (req, res) => {
   }
 };
 
-// Función para obtener la lista de médicos
+
 exports.getDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.find();
@@ -31,7 +31,7 @@ exports.getDoctors = async (req, res) => {
   }
 };
 
-// Actualizar médico
+
 exports.updateDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -42,7 +42,6 @@ exports.updateDoctor = async (req, res) => {
   }
 };
 
-// Eliminar médico
 exports.deleteDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.findByIdAndDelete(req.params.id);

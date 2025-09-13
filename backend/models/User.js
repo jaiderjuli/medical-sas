@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Definir el esquema del usuario
+
 const userSchema = new mongoose.Schema({
   nombre: {
     type: String,
@@ -74,7 +74,7 @@ const userSchema = new mongoose.Schema({
   documento: { type: String, required: true, unique: true },
 });
 
-// Crear el modelo de usuario
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FaUserMd, FaClipboardList, FaUsers, FaBell, FaChartBar, FaCog,
-  FaHome, FaStethoscope, FaSignOutAlt, FaExclamationTriangle, FaPlus, FaEdit, FaTrash
+  FaHome, FaStethoscope, FaSignOutAlt, FaExclamationTriangle, FaPlus, FaEdit, FaTrash,
+  FaCalendarDay, FaCalendarWeek, FaClock, FaBan,
 } from 'react-icons/fa';
 import AuthContext from '../context/AuthContext';
 import api from '../services/api';
+import { getNotificaciones, marcarLeida, eliminarNotificacion } from '../services/notificationApi';
 import '../assets/dashboard-admin.css';
 
 const sections = [
@@ -70,10 +72,8 @@ const DashboardAdmin = () => {
   const [loadingPacientes, setLoadingPacientes] = useState(false);
 
   // NOTIFICACIONES
-  const [notificaciones, setNotificaciones] = useState([
-    { id: 1, mensaje: 'Recordatorio enviado a paciente Juan Pérez', fecha: '2025-08-15 09:00' },
-    { id: 2, mensaje: 'Cita cancelada por paciente Ana Gómez', fecha: '2025-08-14 16:30' },
-  ]);
+  const [notificaciones, setNotificaciones] = useState([]);
+  const [loadingNotificaciones, setLoadingNotificaciones] = useState(false);
 
   // REPORTES
   const [reportes, setReportes] = useState([]);
@@ -157,7 +157,7 @@ const DashboardAdmin = () => {
 
   // CITAS: cargar citas
   useEffect(() => {
-    const fetchCitas = async () => {asi esta
+    const fetchCitas = async () => {
       
       if (activeSection !== 'citas') return;
       setLoadingCitas(true);
@@ -298,58 +298,101 @@ const DashboardAdmin = () => {
   };
 
   // --- Funciones para Citas ---
-  const openEditCita = cita => {
-    setEditCita(cita);
-    setCitaForm(cita);
-    setShowCitaModal(true);
-  };
-  const closeCitaModal = () => {
-    setShowCitaModal(false);
-    setEditCita(null);
-    setCitaForm({});
-  };
-  const handleCitaChange = e => {
-    setCitaForm({ ...citaForm, [e.target.name]: e.target.value });
-  };
-  const handleCitaSubmit = async e => {
-    e.preventDefault();
-    // Aquí va la lógica real de edición
-    closeCitaModal();
-  };
-  const confirmDeleteCita = id => setDeleteCitaId(id);
-  const handleDeleteCita = async () => {
-    // Aquí va la lógica real de eliminación
-    setDeleteCitaId(null);
+  const handleHoraChange = async (id, nuevaHora) => {
+    try {
+      await api.put(`/admin/citas/${id}`, { time: nuevaHora });
+      // Actualiza la lista de citas
+      const res = await api.get('/admin/citas');
+      setCitas(res.data);
+    } catch (err) {
+      alert('Error al actualizar la hora');
+    }
   };
 
-  // --- Funciones para Pacientes ---
+  const handleConfirmCita = async (id) => {
+    try {
+      await api.put(`/admin/citas/${id}`, { estado: 'Confirmada' });
+      const res = await api.get('/admin/citas');
+      setCitas(res.data);
+    } catch (err) {
+      alert('Error al confirmar la cita');
+    }
+  };
+
+  const handleRejectCita = async (id) => {
+    try {
+      await api.put(`/admin/citas/${id}`, { estado: 'Rechazada' });
+      const res = await api.get('/admin/citas');
+      setCitas(res.data);
+    } catch (err) {
+      alert('Error al rechazar la cita');
+    }
+  };
+
+
+
+  const handleRolChange = async (id, nuevoRol) => {
+    try {
+      await api.put(`/admin/pacientes/${id}`, { rol: nuevoRol });
+      const res = await api.get('/admin/pacientes');
+      setPacientes(res.data);
+    } catch {
+      alert('Error al cambiar el rol');
+    }
+  };
+
+  const handleDeletePaciente = async id => {
+    try {
+      await api.delete(`/admin/pacientes/${id}`);
+      const res = await api.get('/admin/pacientes');
+      setPacientes(res.data);
+    } catch {
+      alert('Error al eliminar paciente');
+    }
+  };
+
   const openEditPaciente = paciente => {
     setEditPaciente(paciente);
     setPacienteForm(paciente);
     setShowPacienteModal(true);
   };
+
   const closePacienteModal = () => {
     setShowPacienteModal(false);
     setEditPaciente(null);
     setPacienteForm({});
   };
+
   const handlePacienteChange = e => {
     setPacienteForm({ ...pacienteForm, [e.target.name]: e.target.value });
   };
+
   const handlePacienteSubmit = async e => {
     e.preventDefault();
-    // Aquí va la lógica real de edición
-    closePacienteModal();
+    try {
+      await api.put(`/admin/pacientes/${editPaciente._id}`, pacienteForm);
+      closePacienteModal();
+      const res = await api.get('/admin/pacientes');
+      setPacientes(res.data);
+    } catch {
+      alert('Error al guardar paciente');
+    }
   };
+  // ...otras funciones...
 
-  // Funciones para Reportes
-  const confirmDeleteReporte = id => setDeleteReporteId(id);
-  const handleDeleteReporte = () => {
-    // Aquí va la lógica real de eliminación
+const confirmDeleteReporte = id => setDeleteReporteId(id);
+
+const handleDeleteReporte = async () => {
+  try {
+    setReportes(reportes.filter(r => r.id !== deleteReporteId));
     setDeleteReporteId(null);
-  };
+  } catch {
+    setDeleteReporteId(null);
+    alert('Error al eliminar reporte');
+  }
+};
 
-  // --- UI ---
+
   return (
     <div className="dashboard-admin">
       <aside className="dashboard-admin-sidebar">
@@ -390,19 +433,19 @@ const DashboardAdmin = () => {
                 <>
                   <div className="dashboard-admin-cards">
                     <div className="dashboard-admin-card">
-                      <h4>Citas de hoy</h4>
+                      <h4><FaCalendarDay style={{ marginRight: 8 }} />Citas de hoy</h4>
                       <span className="dashboard-admin-card-num">{resumen.hoy}</span>
                     </div>
                     <div className="dashboard-admin-card">
-                      <h4>Citas esta semana</h4>
+                      <h4><FaCalendarWeek style={{ marginRight: 8 }} />Citas esta semana</h4>
                       <span className="dashboard-admin-card-num">{resumen.semana}</span>
                     </div>
                     <div className="dashboard-admin-card alert">
-                      <h4>Pendientes</h4>
+                      <h4><FaClock style={{ marginRight: 8 }} />Pendientes</h4>
                       <span className="dashboard-admin-card-num">{resumen.pendientes}</span>
                     </div>
                     <div className="dashboard-admin-card alert-cancel">
-                      <h4>Canceladas</h4>
+                      <h4><FaBan style={{ marginRight: 8 }} />Canceladas</h4>
                       <span className="dashboard-admin-card-num">{resumen.canceladas}</span>
                     </div>
                   </div>
@@ -590,13 +633,64 @@ const DashboardAdmin = () => {
           )}
 
           {/* CITAS */}
-         
-         
+          {activeSection === 'citas' && (
+            <div className="dashboard-admin-citas">
+              <h3>Gestión de citas</h3>
+              {loadingCitas ? (
+                <div>Cargando citas...</div>
+              ) : (
+                <table className="dashboard-citas-table">
+                  <thead>
+                    <tr>
+                      <th>Especialidad</th>
+                      <th>Médico</th>
+                      <th>Fecha</th>
+                      <th>Hora</th>
+                      <th>Tipo</th>
+                      <th>Paciente</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {citas.length === 0 ? (
+                      <tr>
+                        <td colSpan={8} style={{ textAlign: 'center', color: '#e53935' }}>No hay citas registradas.</td>
+                      </tr>
+                    ) : (
+                      citas.map(cita => (
+                        <tr key={cita._id}>
+                          <td>{cita.especialidad}</td>
+                          <td>{cita.doctor}</td>
+                          <td>{cita.date}</td>
+                          <td>
+                            <input
+                              type="time"
+                              value={cita.time}
+                              onChange={e => handleHoraChange(cita._id, e.target.value)}
+                              style={{ width: '90px' }}
+                            />
+                          </td>
+                          <td>{cita.tipo}</td>
+                          <td>{cita.documento}</td>
+                          <td>{cita.estado || 'Pendiente'}</td>
+                          <td>
+                            <button className="dashboard-btn" onClick={() => handleConfirmCita(cita._id)}>Confirmar</button>
+                            <button className="dashboard-btn-cancel" onClick={() => handleRejectCita(cita._id)}>Rechazar</button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )}
 
           {/* PACIENTES */}
           {activeSection === 'pacientes' && (
             <div className="dashboard-admin-pacientes">
-              <h3>Pacientes</h3>
+              <h3>Gestión pacientes</h3>
               {loadingPacientes ? (
                 <div>Cargando pacientes...</div>
               ) : (
@@ -607,7 +701,7 @@ const DashboardAdmin = () => {
                       <th>Correo</th>
                       <th>Documento</th>
                       <th>Teléfono</th>
-                      <th>Citas previas</th>
+                      <th>Rol</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
@@ -623,10 +717,18 @@ const DashboardAdmin = () => {
                           <td>{p.email}</td>
                           <td>{p.documento}</td>
                           <td>{p.telefono}</td>
-                          <td>{p.citasPrevias || 0}</td>
                           <td>
-                            {/* Solo el botón de editar */}
+                            <select
+                              value={p.rol || 'paciente'}
+                              onChange={e => handleRolChange(p._id, e.target.value)}
+                            >
+                              <option value="paciente">Paciente</option>
+                              <option value="administrador">Administrador</option>
+                            </select>
+                          </td>
+                          <td>
                             <button className="dashboard-btn-reagendar" onClick={() => openEditPaciente(p)} title="Editar"><FaEdit /></button>
+                            <button className="dashboard-btn-cancel" onClick={() => handleDeletePaciente(p._id)} title="Eliminar"><FaTrash /></button>
                           </td>
                         </tr>
                       ))
@@ -643,7 +745,12 @@ const DashboardAdmin = () => {
                       <input name="nombre" placeholder="Nombre" value={pacienteForm.nombre || ''} onChange={handlePacienteChange} />
                       <input name="apellidos" placeholder="Apellidos" value={pacienteForm.apellidos || ''} onChange={handlePacienteChange} />
                       <input name="telefono" placeholder="Teléfono" value={pacienteForm.telefono || ''} onChange={handlePacienteChange} />
-                      {/* Agrega más campos según tu modelo */}
+                      <input name="email" placeholder="Correo" value={pacienteForm.email || ''} onChange={handlePacienteChange} />
+                      <input name="documento" placeholder="Documento" value={pacienteForm.documento || ''} onChange={handlePacienteChange} />
+                      <select name="rol" value={pacienteForm.rol || 'paciente'} onChange={handlePacienteChange}>
+                        <option value="paciente">Paciente</option>
+                        <option value="administrador">Administrador</option>
+                      </select>
                       <div className="dashboard-modal-actions">
                         <button className="dashboard-btn" type="submit">Guardar</button>
                         <button className="dashboard-btn-cancel" type="button" onClick={closePacienteModal}>Cancelar</button>
@@ -686,7 +793,7 @@ const DashboardAdmin = () => {
                         </td>
                       </tr>
                     ))
-                  )}
+                   ) }
                 </tbody>
               </table>
               {/* Confirmar eliminar reporte */}

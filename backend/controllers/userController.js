@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-// Configuración de nodemailer (ajusta con tus credenciales reales)
+// Configuración de nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -31,7 +31,7 @@ exports.registerUser = async (req, res) => {
     const newUser = new User({
       nombre,
       apellidos,
-      documento, // ahora sí tiene valor
+      documento, 
       genero,
       telefono,
       fechaNacimiento,
@@ -76,32 +76,7 @@ exports.activateUser = async (req, res) => {
   }
 };
 
-// Función para el login de usuario
-/*exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
 
-  
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ msg: 'Usuario no encontrado' });
-    }
-    if (!user.isActive) {
-      return res.status(403).json({ msg: 'Debes activar tu cuenta desde el correo' });
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: 'Contraseña incorrecta' });
-    }
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ token });
-  } catch (error) {
-    res.status(500).json({ msg: 'Error al autenticar usuario', error });
-  }
-};*/
-
-/////////////////////////////////////////////////////////////
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -112,7 +87,7 @@ exports.loginUser = async (req, res) => {
       _id: 'admin-id',
       nombre: 'Administrador',
       apellidos: 'Principal',
-      documento: '00000000', // <-- valor fijo para admin
+      documento: '00000000', 
       email: 'medicalcol.sas@gmail.com',
       rol: 'admin',
       token: 'token-falso-para-pruebas'
@@ -136,7 +111,7 @@ exports.loginUser = async (req, res) => {
       _id: user._id,
       nombre: user.nombre,
       apellidos: user.apellidos,
-      documento: user.documento, // <-- valor real del paciente
+      documento: user.documento,
       email: user.email,
       rol: user.rol,
       token

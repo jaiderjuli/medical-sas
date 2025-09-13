@@ -1,4 +1,3 @@
-/* Estilos profesionales para el formulario de registro */
 .register-container {
   min-height: 100vh;
   display: flex;
@@ -16,21 +15,17 @@
   padding: 40px 0;
 }
 
-.register-side-info {
-  background: #222e36;
-  color: #fff;
+.register-side-info,
+.register-form-side {
+  flex: 1 1 0;
+  min-width: 320px;
+  max-width: 400px;
+  width: 100%;
+  height: 100%; 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-width: 320px;
-  max-width: 400px;
-  width: 35vw;
-  border-top-left-radius: 18px;
-  border-bottom-left-radius: 18px;
-  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
-  position: relative;
-  overflow: hidden;
 }
 
 .register-title-side {
@@ -41,12 +36,27 @@
   font-weight: 800;
   text-align: center;
   color: #2bbbad;
-  margin: 0 2rem;
+  margin: 0 2rem 1.2rem 2rem; 
   line-height: 1.2;
+  display: block;
+  
+}
+
+.register-side-info {
+  background: #222e36; 
+  color: #fff;
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+  padding: 2.5rem 2rem;
+  max-width: 480px;
+  width: 100%;
+  height: 1000px; 
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+  justify-content: center; 
+  text-align: center;
 }
 
 .register-form-side {
@@ -146,15 +156,13 @@
 }
 
 .register-logo {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
   margin-top: 0.5rem;
   display: block;
 }
 
 .register-btn-login {
-  margin-top: 2.5rem;
+  margin-top: 1.2rem; 
   background: #1976d2;
   color: #fff;
   border: none;

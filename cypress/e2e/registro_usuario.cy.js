@@ -1,0 +1,33 @@
+describe('Registro de nuevo usuario', () => {
+  it('Debe mostrar el formulario de registro y crear una cuenta', () => {
+    cy.visit('http://localhost:3000');
+    cy.contains('Crear Cuenta').click();
+    cy.wait(500);
+    cy.get('input[name="nombre"]').type('Prueba');
+    cy.wait(300);
+    cy.get('input[name="apellidos"]').type('Usuario');
+    cy.wait(300);
+    cy.get('input[name="documento"]').type('987654321');
+    cy.wait(300);
+    cy.get('select[name="genero"]').select('Masculino');
+    cy.wait(300);
+    cy.get('input[name="telefono"]').type('5551234567');
+    cy.wait(300);
+    cy.get('input[name="fechaNacimiento"]').type('1995-05-10');
+    cy.wait(300);
+    cy.get('input[name="direccion"]').type('Calle 456 #78-90');
+    cy.wait(300);
+    cy.get('input[name="ciudad"]').type('Bogotá');
+    cy.wait(300);
+    cy.get('input[name="departamento"]').type('Cundinamarca');
+    cy.wait(300);
+    cy.get('input[name="email"]').type('prueba.usuario@example.com');
+    cy.wait(300);
+    cy.get('input[name="password"]').type('claveSegura123');
+    cy.wait(300);
+    cy.get('input[name="confirmPassword"]').type('claveSegura123');
+    cy.wait(300);
+    cy.get('button[type="submit"]').click();
+    cy.contains('Crear Cuenta').should('exist');
+  });
+});
